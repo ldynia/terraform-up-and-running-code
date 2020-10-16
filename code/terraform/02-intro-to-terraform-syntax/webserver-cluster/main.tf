@@ -64,9 +64,7 @@ data "aws_subnet_ids" "default" {
 }
 
 resource "aws_lb" "example" {
-
-  name               = var.alb_name
-
+  name               = "terraform-asg-example"
   load_balancer_type = "application"
   subnets            = data.aws_subnet_ids.default.ids
   security_groups    = [aws_security_group.alb.id]
@@ -90,16 +88,14 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_lb_target_group" "asg" {
-
-  name = var.alb_name
-
+  name     = "terraform-asg-example"
   port     = var.server_port
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
 
   health_check {
     path                = "/"
-    protocol            = "HTTP"
+    protocol            = "http"
     matcher             = "200"
     interval            = 15
     timeout             = 3
